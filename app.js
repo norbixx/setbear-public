@@ -66,11 +66,6 @@ client.on('ready', () => {
             name: `@${client.user.username} at ${client.guilds.cache.size} servers.`,
             type: 'WATCHING'
         }
-
-         client.channels.fetch('651552453682266155')
-            .then(channel => {
-                channel.send("Fetching best voice for next time (pisze to na wypadek przerzucenia jak sie najebie)...");
-            })
     });
 
     const Guilds = client.guilds.cache.map(guild => guild.id);
@@ -78,10 +73,6 @@ client.on('ready', () => {
     logger.log('info', `App is going online as >>> ${client.user.tag} build: ${build_version}!`);
     logger.log('info', `${Guilds} >>> LOGGED`);
 
-    client.channels.fetch('514558215166492672')
-        .then(channel => {
-            channel.send("[INFO] VPS ERROR #42936!!");
-        })
 });
 
 client.on('disconnect', () => { logger.log('info', `${client.user.tag} is going offline`)});
