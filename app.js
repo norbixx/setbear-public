@@ -1,4 +1,4 @@
-﻿//LATEST STABLE 0.7.9 ALPHA && NORBIX [DEV]
+﻿//LATEST STABLE 1.0.0 ALPHA && NORBIX [DEV]
 const Discord = require('discord.js');
 const { token, globalPrefix, build_version, mysql_host, mysql_user, mysql_password, mysql_database } = require('./config/config.js');
 const client = new Discord.Client();
