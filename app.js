@@ -195,24 +195,6 @@ client.on('guildMemberUpdate', (oldMember, newMember) => {
         })
     }
 
-    const norbix = client.users.cache.find(user => user.id === `308766750529552386`);
-    const newMemberID = newMember.user.id;
-    if (newMemberID == norbix) {
-        let firstHadRole = oldMember.roles.cache.has('787813088367345695');
-        let firstHasRole = newMember.roles.cache.has('787813088367345695');
-        let secondHadRole = oldMember.roles.cache.has('787813102883438633');
-        let secondHasRole = newMember.roles.cache.has('787813102883438633');
-
-        if (!firstHadRole && firstHasRole) {
-            try {
-                newMember.roles.remove('787813088367345695', 'auto-usuwanie przez dziadka');
-            } catch (e) { console.log(e); }
-        } else if (!secondHadRole && secondHasRole) {
-            try {
-                newMember.roles.remove('787813102883438633', 'auto-usuwanie przez dziadka');
-            } catch (e) { console.log(e); }
-        } else return;
-    }
 });
 
 
