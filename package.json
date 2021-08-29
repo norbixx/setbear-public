@@ -1,0 +1,36 @@
+{
+  "name": "setbear",
+  "version": "1.0.0",
+  "release": "ALPHA",
+  "description": "Discord bot with many features.",
+  "private": true,
+  "main": "app.js",
+  "author": "Norbix",
+  "license": "ISC",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node app.js",
+    "start": "node -r dotenv/config config/config.js dotenv_config_path=.env && node app.js"
+  },
+  "dependencies": {
+    "canvas": "^2.7.0",
+    "canvas-constructor": "^4.1.0",
+    "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0",
+    "express": "^4.15.2",
+    "hastebin-gen": "^2.0.5",
+    "mysql": "^2.18.1",
+    "sequelize": "^6.6.2",
+    "sqlite3": "^5.0.2",
+    "winston": "^3.3.3"
+  },
+  "engines": {
+    "node": "^14.x",
+    "npm": "^6.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/norbixx/setbear-app.git"
+  },
+  "devDependencies": {}
+}
