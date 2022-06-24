@@ -1,6 +1,6 @@
-﻿//LATEST STABLE 1.0.0 ALPHA && NORBIX [DEV]
+﻿//LATEST STABLE 0.7.9 ALPHA && NORBIX [RELEASE]
 const Discord = require('discord.js');
-const { token, globalPrefix, build_version, mysql_host, mysql_user, mysql_password, mysql_database } = require('./config/config.js');
+const { token, globalPrefix, build_version, mysql_host, mysql_user, mysql_password, mysql_database } = require('./config/config.json');
 const client = new Discord.Client();
 const cooldowns = new Discord.Collection();
 const winston = require('winston');
@@ -8,14 +8,6 @@ const mysql = require('mysql');
 const express = require('express');
 const path = require('path');
 const PORT = process.env.PORT || 5000;
-
-/*
- * [TESTING SPACE]
-*/
-   
-/*
- * [.............]
-*/
 
 const logger = winston.createLogger({
     transports: [
@@ -67,11 +59,21 @@ client.on('ready', () => {
         }
     });
 
+    const restartEmbed = new Discord.MessageEmbed()
+        .setColor('0xFFFFFF')
+        .setAuthor(`[INFO]`)
+        .setDescription(`Działam ponownie po problemach (discord się restartował lub zaaktualizowałem się).`)
+        .setThumbnail(`https://cdn.discordapp.com/emojis/790366649655361566.png`)
+        .setTimestamp();
+
+    client.channels.fetch('791331845518262322').then(c => {
+        c.send(restartEmbed);
+    });
+
     const Guilds = client.guilds.cache.map(guild => guild.id);
 
     logger.log('info', `App is going online as >>> ${client.user.tag} build: ${build_version}!`);
     logger.log('info', `${Guilds} >>> LOGGED`);
-
 });
 
 client.on('disconnect', () => { logger.log('info', `${client.user.tag} is going offline`)});
@@ -82,7 +84,6 @@ client.on('error', m => logger.log('error', m));
 express()
     .use(express.static(path.join(__dirname, 'public')))
     .set('views', path.join(__dirname, 'views'))
-    .set('view engine', 'ejs')
     .get('/', (req, res) => res.render('pages/index'))
     .get('/cool', (req, res) => res.send(cool()))
     .listen(PORT, () => logger.log('info', `App listening on >>> ${PORT}`));
@@ -100,9 +101,19 @@ for (const file of commandFiles) {
 }
 
 client.on('message', async message => {
-        var prefix = globalPrefix;
 
-        if (!message.content.startsWith(prefix) || message.author.bot) return;
+    let args;
+    var prefix = globalPrefix;
+
+    if (!message.content.startsWith(prefix) || message.author.bot) return;
+
+    if (
+        message.channel.id === '791331845518262322'
+        || message.channel.id === '651552453682266155'
+        || message.member.hasPermission('ADMINISTRATOR')
+        || message.member.roles.cache.has('514552587605901322')
+        || message.member.roles.cache.has('790040884019855370')
+    ) {
 
         args = message.content.slice(prefix.length).trim().split(/\s+/);
         const commandName = args.shift().toLowerCase();
@@ -150,13 +161,15 @@ client.on('message', async message => {
             command.execute(message, args, con);
         } catch (error) {
             console.error(error);
-            message.reply(`${message.author}, wystąpił błąd podczas próby uruchomienia komendy (przekaż błąd dla twórcy)!`);
+            message.reply('wystąpił błąd podczas próby uruchomienia komendy (przekaż błąd dla twórcy)!');
         }
+    }
 });
 
 client.on('guildMemberAdd', member => {
 
     let newRoles = ['529765153609351191', '753605339731066981'];
+    let user = member.user.username;
     let avatar = member.user.avatarURL();
     let emoji = member.guild.emojis.cache.find(emoji => emoji.name === 'bearLOVE');
 
@@ -165,19 +178,19 @@ client.on('guildMemberAdd', member => {
     const newUserEmbed = new Discord.MessageEmbed()
         .setColor('0xE67E22')
         .setAuthor(`Nowy niedźwiadek w rodzince!`, `${avatar}`)
-        .setDescription(`**${ user }** dołączył/a do naszej rodzinki, przywitajcie gorąco nowego niedźwiadka oraz oprowadźcie po serwerze ${emoji}!`)
+        .setDescription(`**${user}** dołączył/a do naszej rodzinki, przywitajcie gorąco nowego niedźwiadka oraz oprowadźcie po serwerze ${emoji}!`)
         .setThumbnail(`https://cdn.discordapp.com/emojis/615717155006054453.png`)
         .setTimestamp();
 
-    member.client.channels.fetch('787812026809450547').then(c => {
+    member.client.channels.fetch('514550982122799114').then(c => {
         c.send(newUserEmbed);
     })
 });
 
 client.on('guildMemberUpdate', (oldMember, newMember) => {
 
-    const hadRole = oldMember.roles.cache.has('807230340543414312');
-    const hasRole = newMember.roles.cache.has('807230340543414312');
+    const hadRole = oldMember.roles.cache.has('693846156219777094');
+    const hasRole = newMember.roles.cache.has('693846156219777094');
     let user = newMember.user.username;
     let avatar = newMember.user.avatarURL();
     let emoji = newMember.guild.emojis.cache.find(emoji => emoji.name === 'bearGASM');
@@ -190,13 +203,31 @@ client.on('guildMemberUpdate', (oldMember, newMember) => {
         .setTimestamp();
 
     if (!hadRole && hasRole) {
-        newMember.client.channels.fetch('787812026809450547').then(c => {
+        newMember.client.channels.fetch('514550982122799114').then(c => {
             c.send(boosterEmbed);
         })
     }
 
-});
+    const norbix = client.users.cache.find(user => user.id === `308766750529552386`);
+    const newMemberID = newMember.user.id;
+    if (newMemberID == norbix) {
+        let firstHadRole = oldMember.roles.cache.has('617322733545717790');
+        let firstHasRole = newMember.roles.cache.has('617322733545717790');
+        let secondHadRole = oldMember.roles.cache.has('807929628051111936');
+        let secondHasRole = newMember.roles.cache.has('807929628051111936');
 
+        if (!firstHadRole && firstHasRole) {
+            try {
+                newMember.roles.remove('617322733545717790', 'auto-usuwanie dla chlora gibona');
+            } catch (e) { console.log(e); }
+        } else if (!secondHadRole && secondHasRole) {
+            try {
+                newMember.roles.remove('807929628051111936', 'auto-usuwanie dla chlora gibona');
+            } catch (e) { console.log(e); }
+        } else return;
+    }
+
+});
 
 client.on('voiceStateUpdate', (oldState, newState) => {
 
@@ -221,12 +252,12 @@ client.on('voiceStateUpdate', (oldState, newState) => {
 
         if (newState.serverDeaf === true && newState.serverDeaf !== oldState.serverDeaf) {
             var color = '#2C81C7';
-            var text = 'has been deafed by {admin}';
+            var text = 'has been deafed by admin';
             var thumbnail = 'https://i.imgur.com/ZGimzdV.png';
             var emoji = ':mute:';
             var author = newState.member.user.tag;
             var avatar = newState.member.user.avatarURL();
-            var description = `${emoji} <@${userID}> **${text}** .`;
+            var description = `${emoji} <@${userID}> **${text}**.`;
 
             generateEmbed(color, author, avatar, description, thumbnail);
         } else if (newState.serverDeaf === false && newState.serverDeaf !== oldState.serverDeaf) {
@@ -243,22 +274,22 @@ client.on('voiceStateUpdate', (oldState, newState) => {
 
         if (newState.serverMute === true && newState.serverMute !== oldState.serverMute) {
             var color = '2C81C7';
-            var text = 'has been muted by {admin}';
+            var text = 'has been muted by admin';
             var thumbnail = 'https://i.imgur.com/SqfjqEO.png';
             var emoji = newState.guild.emojis.cache.find(emoji => emoji.name === 'mute')
             var author = newState.member.user.tag;
             var avatar = newState.member.user.avatarURL();
-            var description = `${emoji} <@${userID}> **${text}** .`;
+            var description = `${emoji} <@${userID}> **${text}**.`;
 
             generateEmbed(color, author, avatar, description, thumbnail);
-        } else if (newState.serverMute === false && newState.serverMute !== oldState.serverMute){
+        } else if (newState.serverMute === false && newState.serverMute !== oldState.serverMute) {
             var color = '#2CC791';
-            var text = 'has been unmuted by {admin}';
+            var text = 'has been unmuted by admin';
             var thumbnail = 'https://i.imgur.com/ykffhwa.png';
             var emoji = ':microphone2:';
             var author = newState.member.user.tag;
             var avatar = newState.member.user.avatarURL();
-            var description = `${emoji} <@${userID}> **${text}** .`;
+            var description = `${emoji} <@${userID}> **${text}**.`;
 
             generateEmbed(color, author, avatar, description, thumbnail);
         }
@@ -285,14 +316,12 @@ client.on('voiceStateUpdate', (oldState, newState) => {
             .setThumbnail(thumbnail)
             .setTimestamp();
 
-        newState.client.channels.fetch('783784893318168657').then(c => {
+        newState.client.channels.fetch('791630279440859156').then(c => {
             c.send(newUserEmbed);
         })
     }
 
 });
 
-const levelModule = require("./modules/levelModule.js");
-levelModule.execute(client, con, logger);
 
 client.login(token);
